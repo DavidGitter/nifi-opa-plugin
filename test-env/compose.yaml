@@ -1,0 +1,93 @@
+version: '2'
+
+networks:
+  test-network:
+    driver: bridge
+
+services:
+
+  openldap:
+    ports:
+      - '1389:1389'
+      - '1636:1636'
+      - '389:389'
+      - '636:636'
+    expose:
+      - "1389:1389"
+      - '389:389'
+    image: "bitnami/openldap:2.5.18"
+    environment:
+      LDAP_ADMIN_USERNAME: 'admin'
+      LDAP_ADMIN_PASSWORD: 'adminpassword'
+      LDAP_USERS: 'user01,user02,user03,user04'
+      LDAP_PASSWORDS: 'password01,password02,password03,password04'
+      LDAP_ADMIN_DN: 'cn=admin,dc=example,dc=org'
+      LDAP_ROOT: 'dc=example,dc=org'
+      LDAP_LOGLEVEL: -1
+    networks:
+      - test-network
+    volumes:
+      - 'openldap_data:/bitnami/openldap'
+
+  # Nifi-LDAP-OPA
+  nifi:
+    ports:
+      - 9443:9443
+      - 8443:8443
+    image: apache/nifi:1.27.0
+    volumes:
+      - ./certs/localhost/:/opt/certs/
+      - ./authorizers-opa.xml:/opt/opa/authorizers-opa.xml
+      - ../authorizer/target/opa-authorizer-0.0.1.nar:/opt/nifi/nifi-current/extensions/opa-authorizer-0.0.1.nar
+    environment:
+      AUTH: ldap
+      KEYSTORE_PATH: /opt/certs/keystore.jks
+      KEYSTORE_TYPE: JKS 
+      KEYSTORE_PASSWORD: bMdX5zdxA011zdDuMxqen+LjyQAacu9Xpwvk0/SUuFw
+      TRUSTSTORE_PATH: /opt/certs/truststore.jks
+      TRUSTSTORE_PASSWORD: beMkAJaKVJItosXYKfjspeFH1To7LvpwxHbrTga4lOg
+      TRUSTSTORE_TYPE: JKS 
+      INITIAL_ADMIN_IDENTITY: 'user01'
+      LDAP_AUTHENTICATION_STRATEGY: 'SIMPLE'
+      LDAP_MANAGER_DN: 'cn=admin,dc=example,dc=org'
+      LDAP_MANAGER_PASSWORD: 'adminpassword'
+      LDAP_USER_SEARCH_BASE: 'ou=users,dc=example,dc=org'
+      LDAP_USER_SEARCH_FILTER: 'cn={0}'
+      LDAP_IDENTITY_STRATEGY: 'USE_USERNAME'
+      LDAP_URL: ldap://openldap:1389
+      OPA_URI: "http://opa:8181/"
+    networks:
+      - test-network
+
+  opa:
+    hostname: opa
+    image: openpolicyagent/opa:0.67.0
+    ports:
+      - 8181:8181
+    command: 
+      - "run" 
+      - "--server"
+      - "/policies/nifi_rules.rego"
+
+      - "/policies/nifi_global_policies.rego"
+      - "/policies/nifi_root_policies.rego"
+      - "/policies/nifi_node_policies.rego"
+
+      - "/policies/nifi_global_logic.rego"
+      - "/policies/nifi_component_logic.rego"
+
+      - "/policies/nifi_input.rego"
+      # - "--log-level=debug"
+      - "--set=decision_logs.console=true"
+      - "--set=addr=http://localhost:8181"
+      # - "--tls-cert-file=/opt/certs/public.crt"
+      # - "--tls-private-key-file=/opt/certs/private.key"
+    volumes:
+      - ../rego/:/policies/
+      - ./certs/opa/:/opt/certs/
+    networks:
+      - test-network
+
+volumes:
+  openldap_data:
+    driver: local

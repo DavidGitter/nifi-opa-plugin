@@ -1,0 +1,81 @@
+package nifi_global_policies
+
+global_policies := {
+    "/flow": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/controller": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/parameter-contexts": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/provenance": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/restricted-components": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/policies": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/tenants": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/site-to-site": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/system": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/proxy": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    },
+    "/counters": {
+        "users": {
+            "User1": "FULL",
+            "User2": "READ"
+        },
+        "groups": {}
+    }
+}

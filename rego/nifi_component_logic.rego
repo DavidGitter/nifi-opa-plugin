@@ -1,0 +1,151 @@
+package nifi_comp
+
+import rego.v1
+import data.nifi_inp
+
+import data.nifi_root_policies.root_policies
+import data.nifi_node_policies.node_policies
+
+
+has_key(obj, key) := true if _ = obj[key]
+
+# Root Component Rules Logic
+root_policy_types := [key | key := object.keys(root_policies)[_]]
+get_root_type := x if {
+    comp_type = root_policy_types[_]
+    startswith(nifi_inp.inherit_resource_id, comp_type)
+    x = comp_type
+}
+comp_is_root_type := get_root_type in root_policy_types
+
+component_exists_in_root(comp_type, res_name) := true if {
+    has_key(root_policies, comp_type)
+    has_key(root_policies[comp_type], res_name)
+}
+root_policy_user_has_permissions(comp_type, res_name, user_name, action) := true if {
+    component_exists_in_root(comp_type, res_name)
+    user_name in root_policies[comp_type][res_name][action]["users"]
+}
+
+
+
+# node Component Rules Logic
+node_policy_types := [key | key := object.keys(node_policies)[_]]
+get_node_type := x if {
+    comp_type = node_policy_types[_]
+    startswith(nifi_inp.inherit_resource_id, comp_type)
+    x = comp_type
+}
+comp_is_node_type := get_node_type in node_policy_types
+compID := array.reverse(split(nifi_inp.resource_id, "/"))[0]
+inheritCompID := array.reverse(split(nifi_inp.inherit_resource_id, "/"))[0]
+
+component_exists_in_node(comp_type, comp_ID) := true if {
+    has_key(node_policies, comp_type)
+    has_key(node_policies[comp_type], comp_ID)
+}
+
+node_policy_user_has_permissions(comp_type, comp_ID, user_name, action) := true if {
+    component_exists_in_node(comp_type, comp_ID)
+    user_name in node_policies[comp_type][comp_ID][action]["users"]
+}
+
+
+
+
+## Flow Access
+flow_allowed:= true if {
+    root_policy_user_has_permissions(
+        get_root_type, 
+        "NiFi Flow",
+        nifi_inp.user_name,
+        nifi_inp.action)
+}
+flow_denied:= true if { # macht nur Sinn für Unter-Res zu denyn
+    root_policy_user_has_permissions(
+        get_root_type, 
+        "NiFi Flow",
+        nifi_inp.user_name,
+        "deny")
+}
+
+root_comp_allowed := true if {
+    root_policy_user_has_permissions(
+        get_root_type, 
+        nifi_inp.resource_name,
+        nifi_inp.user_name,
+        nifi_inp.action)
+}
+root_comp_denied := true if {
+    root_policy_user_has_permissions(
+        get_root_type, 
+        nifi_inp.resource_name,
+        nifi_inp.user_name,
+        "deny")
+}
+root_inherit_comp_allowed := true if {
+    root_policy_user_has_permissions(
+        get_root_type, 
+        nifi_inp.inherit_resource_name,
+        nifi_inp.user_name,
+        nifi_inp.action)
+}
+root_inherit_comp_denied := true if {
+    root_policy_user_has_permissions(
+        get_root_type, 
+        nifi_inp.inherit_resource_name,
+        nifi_inp.user_name,
+        "deny")
+}
+
+
+
+node_comp_allowed := true if {
+    node_policy_user_has_permissions(
+        get_node_type, 
+        compID,
+        nifi_inp.user_name,
+        nifi_inp.action)
+}
+node_comp_denied := true if {
+    node_policy_user_has_permissions(
+        get_node_type, 
+        compID,
+        nifi_inp.user_name,
+        "deny")
+}
+node_inherit_comp_allowed := true if {
+    node_policy_user_has_permissions(
+        get_node_type, 
+        inheritCompID,
+        nifi_inp.user_name,
+        nifi_inp.action)
+}
+node_inherit_comp_denied := true if {
+    node_policy_user_has_permissions(
+        get_node_type, 
+        inheritCompID,
+        nifi_inp.user_name,
+        "deny")
+}
+
+node_comp_has_action := true if {
+    component_exists_in_node(get_node_type, inheritCompID)
+    not has_key(node_policies[get_node_type][inheritCompID], nifi_inp.action)
+}
+
+inherit_comp_exists_as_root := true if {
+    component_exists_in_root(get_root_type, nifi_inp.inherit_resource_name)
+}
+
+comp_exists_as_root := true if {
+    component_exists_in_root(get_root_type, nifi_inp.resource_name)
+}
+
+inherit_comp_exists_as_node := true if {
+    component_exists_in_node(get_node_type, inheritCompID)
+}
+
+comp_exists_as_node := true if {
+    component_exists_in_node(get_node_type, compID)
+}
