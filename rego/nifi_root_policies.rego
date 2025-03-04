@@ -13,7 +13,7 @@ package nifi_root_policies
 
 root_policies := {
     "/processors": {
-    }
+    },
 
     "/process-groups": {
         "Projekt1":{
