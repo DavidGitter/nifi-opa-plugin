@@ -11,13 +11,8 @@ import org.slf4j.LoggerFactory;
 public class ConfigLoader {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigLoader.class);
-	private static AuthorizerConfigurationContext configurationContext;
 
-	public ConfigLoader(AuthorizerConfigurationContext configurationContext) {
-		ConfigLoader.configurationContext = configurationContext;
-	}
-
-	public static String getProperty(String propertyName, String defaultValue) throws InvalidParameterException {
+	public static String getProperty(AuthorizerConfigurationContext configurationContext, String propertyName, String defaultValue) throws InvalidParameterException {
 		// 1. Try load from environment
 		try {
 			String propertyEnv = System.getenv(propertyName);
@@ -43,8 +38,8 @@ public class ConfigLoader {
 		return defaultValue;
 	}
 
-	public static String getProperty(String propertyName) throws InvalidParameterException {
-		String property = ConfigLoader.getProperty(propertyName, null);
+	public static String getProperty(AuthorizerConfigurationContext configurationContext, String propertyName) throws InvalidParameterException {
+		String property = ConfigLoader.getProperty(configurationContext, propertyName, null);
 		if (property != null)
 			return property;
 		throw new InvalidParameterException(

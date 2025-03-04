@@ -50,17 +50,19 @@ This builds the ``.nar``-plugin in the ``/target`` folder.
 
 In order to use the plugin in Apache NiFi the following steps must be performed:
 1. Go to the ``/opt/nifi/nifi-current/conf/authorizers.xml`` in your Apache NiFi Instance / Container
-2. Place the the following ``opa-authorizer``-snippet in the file (e.g. beneath the ``managed-authorizer``):
+2. Place the the following ``opa-authorizer``-snippet in the file (for example beneath the ``managed-authorizer``):
 ````xml
-<!-- Overriding the normal managed-authorizer entry -->
+<!-- example snippet -->
 <authorizer>
     <identifier>opa-authorizer</identifier>
     <class>org.nifiopa.nifiopa.OpaAuthorizer</class>
     <property name="CACHE_TIME_SECS">30</property>
     <property name="CACHE_MAX_ENTRY_COUNT">100</property>
-    <property name="OPA_URI">http://opa:8181/</property>
+    <property name="OPA_URI">http://opa:8181/</property> <!--required-->
+    <property name="OPA_RULE_HEAD">nifi/allow</property> <!--required-->
 </authorizer>
 ````
+Alternatively, the properties fields can also be set as environment variables.
 3. Set the env-variable ``NIFI_SECURITY_USER_AUTHORIZER`` of Apache NiFi **or** the ``nifi.security.user.authorizer`` in Apache NiFis nifi.properties-file to ``opa-authorizer``.
 4. Place the ``nar``-plugin you build aboth in the ``/opt/nifi/nifi-current/extensions/`` folder of your Apache NiFi Instance / Container
 5. Restart Apache NiFi
@@ -72,6 +74,7 @@ The following properties can be configurated in the ``authorizers.xml`` or using
 | Property Key | Example | Default | Description |
 | --- | --- | --- | --- |
 | `OPA_URI` | `http://opa:8181/` |  | Endpoint of the OPA policy to query. **required** |
+| `OPA_RULE_HEAD` | `nifi/allow` |  | Rule head against which the query is made (*package*/*rule*). **required** |
 | `CACHE_TIME_SECS` | `30` | `30` | Maximum time in seconds an entry in the decision cache exists. |
 | `CACHE_MAX_ENTRY_COUNT` | `100` | `0` | Maximum entries of the decision cache. |
 

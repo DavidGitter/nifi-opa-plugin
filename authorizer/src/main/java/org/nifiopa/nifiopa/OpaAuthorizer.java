@@ -25,6 +25,9 @@ public class OpaAuthorizer implements Authorizer {
 
 	private final String OPA_URI_PROPNAME = "OPA_URI";
 
+	private final String OPA_RULE_HEAD_PROPNAME = "OPA_RULE_HEAD";
+	private String OPA_RULE_HEAD;
+
 	@Override
 	public AuthorizationResult authorize(AuthorizationRequest request) throws AuthorizationAccessException {
 
@@ -79,7 +82,7 @@ public class OpaAuthorizer implements Authorizer {
 
 		OPAResponse opaResponse = null;
 		try {
-			opaResponse = opaClient.evaluate("nifi/allow", requestForm, OPAResponse.class); // TODO: rule not hardcoded
+			opaResponse = opaClient.evaluate(OPA_RULE_HEAD, requestForm, OPAResponse.class);
 		} catch (OPAException e) {
 			logger.error(MessageFormat.format("An error occured while trying to query against OPA: {0}", e.toString()));
 			return AuthorizationResult.denied("An error occured while trying to query against OPA");
@@ -121,9 +124,13 @@ public class OpaAuthorizer implements Authorizer {
 
 	@Override
 	public void onConfigured(AuthorizerConfigurationContext configurationContext) throws AuthorizerCreationException {
-		String uriProp = ConfigLoader.getProperty(OPA_URI_PROPNAME);
+		String uriProp = ConfigLoader.getProperty(configurationContext, OPA_URI_PROPNAME);
 		if (uriProp == null)
 			throw new AuthorizerCreationException("Missing required property OPA_URI");
+
+		OPA_RULE_HEAD = ConfigLoader.getProperty(configurationContext, OPA_RULE_HEAD_PROPNAME);
+		if (OPA_RULE_HEAD == null)
+			throw new AuthorizerCreationException("Missing required property OPA_RULE_HEAD");
 
 		opaClient = new OPAClient(uriProp);
 		cache = new RequestCache();

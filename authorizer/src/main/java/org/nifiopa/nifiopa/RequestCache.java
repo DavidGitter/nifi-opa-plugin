@@ -57,7 +57,7 @@ public class RequestCache {
 	void initializePropertys(AuthorizerConfigurationContext configurationContext) {
 		try {
 			/* Initialize property of maximum cache time after write */
-			String cacheTimeProp = ConfigLoader.getProperty(CACHE_TIME_SECS_PROPNAME, CACHE_TIME_SECS_DEFAULT);
+			String cacheTimeProp = ConfigLoader.getProperty(configurationContext, CACHE_TIME_SECS_PROPNAME, CACHE_TIME_SECS_DEFAULT);
 			if (cacheTimeProp != null)
 				CACHE_TIME_SECS = Integer.parseInt(cacheTimeProp);
 		} catch (NumberFormatException nfe) {
@@ -70,7 +70,7 @@ public class RequestCache {
 
 		/* Initialize property of maximum entries in the cache at one time */
 		try {
-			String cacheMaxEntryProp = ConfigLoader.getProperty(CACHE_MAX_ENTRY_COUNT_PROPNAME, CACHE_MAX_ENTRY_COUNT_DEFAULT);
+			String cacheMaxEntryProp = ConfigLoader.getProperty(configurationContext, CACHE_MAX_ENTRY_COUNT_PROPNAME, CACHE_MAX_ENTRY_COUNT_DEFAULT);
 			if (cacheMaxEntryProp != null)
 				CACHE_MAX_ENTRY_COUNT = Integer.parseInt(cacheMaxEntryProp);
 		} catch (NumberFormatException nfe) {
