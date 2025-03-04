@@ -10,6 +10,7 @@
 - [Requirements](#requirements)
 - [Quick Start](#quick-start)
 - [Testing](#testing)
+- [Rego Rules](#rego-rules)
 
 
 ## Introduction
