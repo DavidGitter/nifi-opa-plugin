@@ -11,119 +11,108 @@ import org.apache.nifi.authorization.AuthorizerInitializationContext;
 import org.apache.nifi.authorization.exception.AuthorizationAccessException;
 import org.apache.nifi.authorization.exception.AuthorizerCreationException;
 import org.apache.nifi.authorization.exception.AuthorizerDestructionException;
-import org.apache.nifi.components.PropertyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.styra.opa.OPAClient;
 import com.styra.opa.OPAException;
 
-public class OpaAuthorizer implements Authorizer
-{
+public class OpaAuthorizer implements Authorizer {
 	private static final Logger logger = LoggerFactory.getLogger(OpaAuthorizer.class);
 	private OPAClient opaClient;
 	private RequestCache cache;
 	private boolean dumpCache = false;
-	
-	private final String PROP_OPA_URI = "OPA_URI";
-	
+
+	private final String OPA_URI_PROPNAME = "OPA_URI";
+
 	@Override
 	public AuthorizationResult authorize(AuthorizationRequest request) throws AuthorizationAccessException {
- 		
+
 		AuthorizationResult cachedResult = cache.getCachedResult(request);
-		if(cachedResult != null && !dumpCache) {
+		if (cachedResult != null && !dumpCache) {
 			logger.debug("PolicyCache: Cache hit.");
 			return cachedResult;
 		}
-		
-		Map<String, Map<String,String>> requestForm = null;
-		
+
+		Map<String, Map<String, String>> requestForm = null;
+
 		try {
 			/* CREATING REQUEST */
 			requestForm = Map.of(
-			"action",
-				Map.of(			"name", 			request.getAction().toString()),
-			
-	        "user", 
-	        	Map.of(			"name", 			request.getIdentity(), 
-	        					"groups", 			String.join(",", request.getGroups())),
-	        
-	        "resource", 
-	        	Map.of(			"name", 			request.getResource().getName(), 
-	        					"id", 				request.getResource().getIdentifier(),
-	        					"safeDescription",	request.getResource().getSafeDescription()),
-        	"requestedResource", 
-	        	Map.of(			"name", 			request.getRequestedResource().getName(), 
-	        					"id", 				request.getRequestedResource().getIdentifier(),
-	        					"safeDescription",	request.getRequestedResource().getSafeDescription()),
-        	"properties", 
-	        	Map.of(			"isAccessAttempt", 	Boolean.toString(request.isAccessAttempt()), 
-	        					"isAnonymous", 		Boolean.toString(request.isAnonymous())),
-        	"userContext", 
-	        	Map.of(			"", 				""), 
-	        	
-        	"resourceContext", 
-	        	Map.of(			"", 				"")
-			);
+					"action",
+					Map.of("name", request.getAction().toString()),
 
-			
-			if(request.getUserContext() != null && !request.getUserContext().isEmpty()) {
-				logger.info("DEBUG: UCONTEXT#");
+					"user",
+					Map.of("name", request.getIdentity(),
+							"groups", String.join(",", request.getGroups())),
+
+					"resource",
+					Map.of("name", request.getResource().getName(),
+							"id", request.getResource().getIdentifier(),
+							"safeDescription", request.getResource().getSafeDescription()),
+					"requestedResource",
+					Map.of("name", request.getRequestedResource().getName(),
+							"id", request.getRequestedResource().getIdentifier(),
+							"safeDescription", request.getRequestedResource().getSafeDescription()),
+					"properties",
+					Map.of("isAccessAttempt", Boolean.toString(request.isAccessAttempt()),
+							"isAnonymous", Boolean.toString(request.isAnonymous())),
+					"userContext",
+					Map.of("", ""),
+
+					"resourceContext",
+					Map.of("", ""));
+
+			if (request.getUserContext() != null && !request.getUserContext().isEmpty()) {
 				requestForm.put("userContext", request.getUserContext());
 			}
-			 
-			if(request.getResourceContext() != null && !request.getResourceContext().isEmpty()) {
-				logger.info("DEBUG: RCONTEXT#");
+
+			if (request.getResourceContext() != null && !request.getResourceContext().isEmpty()) {
 				requestForm.put("resourceContext", request.getResourceContext());
 			}
-			
-		} catch(Exception e) {
-        	logger.error(MessageFormat.format("An error occured while trying to build the OPA-request: {0}", e.toString()));
-        	return AuthorizationResult.denied("An error occured while trying to build the OPA-request");
+
+		} catch (Exception e) {
+			logger.error(
+					MessageFormat.format("An error occured while trying to build the OPA-request: {0}", e.toString()));
+			return AuthorizationResult.denied("An error occured while trying to build the OPA-request");
 		}
-		
+
 		OPAResponse opaResponse = null;
 		try {
 			opaResponse = opaClient.evaluate("nifi/allow", requestForm, OPAResponse.class); // TODO: rule not hardcoded
-        } catch (OPAException e) {
-        	logger.error(MessageFormat.format("An error occured while trying to query against OPA: {0}", e.toString()));
-        	return AuthorizationResult.denied("An error occured while trying to query against OPA");
-        }
-
-		if(opaResponse == null) {
-			logger.error("An error occured while unmarshalling an OPA response.");
-    		return AuthorizationResult.denied("An error occured while unmarshalling an OPA response.");
+		} catch (OPAException e) {
+			logger.error(MessageFormat.format("An error occured while trying to query against OPA: {0}", e.toString()));
+			return AuthorizationResult.denied("An error occured while trying to query against OPA");
 		}
-		
+		if (opaResponse == null) {
+			logger.error("An error occured while unmarshalling an OPA response.");
+			return AuthorizationResult.denied("An error occured while unmarshalling an OPA response.");
+		}
 
 		// Evaluate response from OPA
-		
 		dumpCache = opaResponse.dumpCache();
-		if(dumpCache) {
+		if (dumpCache) {
 			logger.debug("PolicyCache: Cache cleared.");
 			cache.clear();
 		}
-		
-		if(opaResponse.allowed().equals("true"))
-		{
-			cache.putCachedResult(request, AuthorizationResult.approved());
-			logger.debug("Authorizer-Result: Access was approved");
-			return AuthorizationResult.approved();
+
+		switch (opaResponse.allowed()) {
+			case "true":
+				cache.putCachedResult(request, AuthorizationResult.approved());
+				logger.debug("Authorizer-Result: Access was approved");
+				return AuthorizationResult.approved();
+			case "unknown":
+				cache.putCachedResult(request, AuthorizationResult.resourceNotFound());
+				logger.debug("Authorizer-Result: No access resource found");
+				return AuthorizationResult.resourceNotFound();
+			default:
+				cache.putCachedResult(request, AuthorizationResult.denied());
+				logger.debug("Authorizer-Result: Access was denied");
+				return AuthorizationResult
+						.denied(opaResponse.message() != null ? opaResponse.message() : "Access denied.");
 		}
-		else if(opaResponse.allowed().equals("unknown"))
-		{
-			logger.info("DEBUG7");
-			cache.putCachedResult(request, AuthorizationResult.resourceNotFound());
-			logger.debug("Authorizer-Result: No access resource found");
-			return AuthorizationResult.resourceNotFound();
-		}
-		else {
-			cache.putCachedResult(request, AuthorizationResult.denied());
-			logger.debug("Authorizer-Result: Access was denied");
-			return AuthorizationResult.denied(opaResponse.message() != null ? opaResponse.message() : "Access denied.");
-		}
-		
-		//enum - switch
+
+		// enum - switch
 	}
 
 	@Override
@@ -132,11 +121,11 @@ public class OpaAuthorizer implements Authorizer
 
 	@Override
 	public void onConfigured(AuthorizerConfigurationContext configurationContext) throws AuthorizerCreationException {
-		PropertyValue uriProp = configurationContext.getProperty(PROP_OPA_URI);
-		if(!uriProp.isSet())
+		String uriProp = ConfigLoader.getProperty(OPA_URI_PROPNAME);
+		if (uriProp == null)
 			throw new AuthorizerCreationException("Missing required property OPA_URI");
-		
-		opaClient = new OPAClient(uriProp.getValue());
+
+		opaClient = new OPAClient(uriProp);
 		cache = new RequestCache();
 		cache.initialize(configurationContext);
 	}
