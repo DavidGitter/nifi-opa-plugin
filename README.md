@@ -134,9 +134,13 @@ In the ``/rego`` folder the different rules can be found. Apache NiFi has two di
 - Component Access Policies (e.g. "is **User1** allowed to **write** on Processor **xyz**)
 
 The global permissions can be set in the ``/nifi_global_policies.rego``.
+
 The component permissions can be set in the
 - ``/nifi_root_policies.rego`` for the first two component levels using the name of a component
 - ``/nifi_node_policies.rego`` for all components from level 3 and higher using the UUID of a component
+
+The following image is intended to illustrate the previously explained component authorizations
+![alt](/docs/readme/component-logic.svg)
 
 > [!NOTE]  
 > This concept may be revised and simplified in the future.
