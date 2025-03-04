@@ -176,8 +176,6 @@ allow := {
 
 
 ## check for illegal 'non-root equals root name' component name
-
-# illegal name
 allow := {
     "allowed": "false", 
     "dumpCache": true,

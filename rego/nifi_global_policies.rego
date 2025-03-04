@@ -1,3 +1,8 @@
+# DESCRIPTION
+# This file contains the permissions for the global policies
+# that can be found in the NiFi Admin Guide:
+# https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
+
 package nifi_global_policies
 
 global_policies := {
