@@ -56,6 +56,7 @@ services:
       LDAP_IDENTITY_STRATEGY: 'USE_USERNAME'
       LDAP_URL: ldap://openldap:1389
       OPA_URI: "http://opa:8181/"
+      NIFI_SECURITY_USER_AUTHORIZER: "opa-authorizer"
     networks:
       - test-network
 

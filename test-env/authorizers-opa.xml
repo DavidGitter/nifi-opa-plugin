@@ -314,17 +314,17 @@
 
             NOTE: The group must exist before starting NiFi.
     -->
-    <!--
+    
     <accessPolicyProvider>
         <identifier>file-access-policy-provider</identifier>
         <class>org.apache.nifi.authorization.FileAccessPolicyProvider</class>
         <property name="User Group Provider">composite-configurable-user-group-provider</property>
         <property name="Authorizations File">./conf/authorizations.xml</property>
-        <property name="Initial Admin Identity">cn=user01,ou=users,dc=example,dc=org</property>
+        <property name="Initial Admin Identity"></property>
         <property name="Legacy Authorized Users File"></property>
         <property name="Node Identity 1"></property>
         <property name="Node Group"></property>
-    </accessPolicyProvider> -->
+    </accessPolicyProvider>
 
     <!--
         The StandardManagedAuthorizer. This authorizer implementation must be configured with the
@@ -333,12 +333,13 @@
         requests.
 
         - Access Policy Provider - The identifier for an Access Policy Provider defined above.
+    -->
     
     <authorizer>
         <identifier>managed-authorizer</identifier>
         <class>org.apache.nifi.authorization.StandardManagedAuthorizer</class>
         <property name="Access Policy Provider">file-access-policy-provider</property>
-    </authorizer> -->
+    </authorizer>
 
     <!-- CACHED ACCESS POLICY PROVIDER-->
     <!-- <accessPolicyProvider>
@@ -347,9 +348,10 @@
         <property name="User Group Provider">ldap-user-group-provider</property>
     </accessPolicyProvider> -->
 
-    <!-- OPA AUTH....-->
+
+    <!-- The OPA-Authorizer is able to authorize access using an external policy decision point like the open policy agent-->
     <authorizer>
-        <identifier>managed-authorizer</identifier>
+        <identifier>opa-authorizer</identifier>
         <class>org.nifiopa.nifiopa.OpaAuthorizer</class>
         <property name="CACHE_TIME_SECS">30</property>
         <property name="CACHE_MAX_ENTRY_COUNT">100</property>

@@ -77,13 +77,12 @@ The following properties can be configurated in the ``authorizers.xml`` or using
 ## Testing
 
 ### Setup
-In order to use the docker test environment you need open the ``/test-env`` folder and execute
+In order to use the docker test environment you need open the ``/test-env`` folder and execute the start script.
 ```bash
-$ docker compose up -d
+$ ./start.sh
 ```
-Afterwards you have to the steps of Chapter [Using the plugin](#using-the-plugin) (except for step 3).
 
-Then open the Apache NiFi UI: ``https://localhost:8443/nifi/``
+After Apache NiFi is completly up, open the Apache NiFi UI: ``https://localhost:8443/nifi/``.
 
 You might login using one of those credentials:
 - Usernmane: *User1*, Password: *password01*
