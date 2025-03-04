@@ -1,3 +1,12 @@
+# DESCRIPTION
+# This file is the ENTRYPOINT of the rego rules.
+# 
+# In general "implicit" means something is done without being set by the administrator
+# like automatic inheritance or a value not set at all
+#
+# In general "explicit" means something is explicitly set by the administrator
+# like an overwriten inheritance or set permissions in general
+
 package nifi
 
 import rego.v1
@@ -6,6 +15,7 @@ import data.nifi_inp
 import data.nifi_glob
 import data.nifi_comp
 
+# default return values
 default allow = {
     "allowed": "unknown",
     "dumpCache": true
@@ -33,7 +43,7 @@ allow := {
     nifi_glob.global_policy_user_write
 }
 
-# check for full permission
+# check for full permission when action is read
 allow := {
     "allowed": "true", 
     "dumpCache": true
@@ -43,6 +53,7 @@ allow := {
     nifi_glob.global_policy_user_full
 }
 
+# check for full permission when action is write
 allow := {
     "allowed": "true", 
     "dumpCache": true
