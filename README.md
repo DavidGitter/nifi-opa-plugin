@@ -49,21 +49,21 @@ This builds the ``.nar``-plugin in the ``/target`` folder.
 
 In order to use the plugin in Apache NiFi the following steps must be performed:
 1. Go to the ``/opt/nifi/nifi-current/conf/authorizers.xml`` in your Apache NiFi Instance / Container
-2. Replace the ``managed-authorizer``-entry in the file with the following snippet:
+2. Place the the following ``opa-authorizer``-snippet in the file (e.g. beneath the ``managed-authorizer``):
 ````xml
 <!-- Overriding the normal managed-authorizer entry -->
 <authorizer>
-    <identifier>managed-authorizer</identifier>
+    <identifier>opa-authorizer</identifier>
     <class>org.nifiopa.nifiopa.OpaAuthorizer</class>
     <property name="CACHE_TIME_SECS">30</property>
     <property name="CACHE_MAX_ENTRY_COUNT">100</property>
     <property name="OPA_URI">http://opa:8181/</property>
 </authorizer>
 ````
-3. Place the ``nar``-plugin you build aboth in the ``/opt/nifi/nifi-current/extensions/`` folder of your Apache NiFi Instance / Container
-4. Restart Apache NiFi
-
-5. Load the Rego files of the ``/rego`` folder to the OPA and change them according to your needs. Read Chapter [Rego Rules](#rego-rules) for more.
+3. Set the env-variable ``NIFI_SECURITY_USER_AUTHORIZER`` of Apache NiFi **or** the ``nifi.security.user.authorizer`` in Apache NiFis nifi.properties-file to ``opa-authorizer``.
+4. Place the ``nar``-plugin you build aboth in the ``/opt/nifi/nifi-current/extensions/`` folder of your Apache NiFi Instance / Container
+5. Restart Apache NiFi
+6. Load the Rego files of the ``/rego`` folder to the OPA and change them according to your needs. Read Chapter [Rego Rules](#rego-rules) for more.
 
 ### Properties
 The following properties can be configurated in the ``authorizers.xml`` or using the environment variables:
@@ -128,14 +128,14 @@ Note that this is only one of many authorization requests that are sent by Apach
 
 All requests that are sent can be seen in the OPA-Container Decision Logs when using the test environment.
 
-### Files
-In the ``/rego`` folder the different rules can be found. Apache NiFi has two different types of access rules which can be also found in the [Administrator Guide](https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies):
+### Abstraction Rules
+In the ``/rego`` folder different rego-rules can be found which already contain abstraction layers. Apache NiFi has two different types of access rules which can be also found in the [Administrator Guide](https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies):
 - Global Access Policies (example: "is **User1** allowed to **read** the **UI**)
 - Component Access Policies (e.g. "is **User1** allowed to **write** on Processor **xyz**)
 
-The global permissions can be set in the ``/nifi_global_policies.rego``.
+The **global permissions** can be set in the ``/nifi_global_policies.rego``.
 
-The component permissions can be set in the
+The **component permissions** can be set in the
 - ``/nifi_root_policies.rego`` for the first two component levels using the name of a component
 - ``/nifi_node_policies.rego`` for all components from level 3 and higher using the UUID of a component
 
