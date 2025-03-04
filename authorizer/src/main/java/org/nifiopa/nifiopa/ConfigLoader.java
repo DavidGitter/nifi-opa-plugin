@@ -9,43 +9,46 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ConfigLoader {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ConfigLoader.class);
 	private static AuthorizerConfigurationContext configurationContext;
-	
+
 	public ConfigLoader(AuthorizerConfigurationContext configurationContext) {
 		ConfigLoader.configurationContext = configurationContext;
 	}
-	
-	public static String get(String propertyName, String defaultValue) throws InvalidParameterException
-	{
-		//1. Try load from configurations
+
+	public static String getProperty(String propertyName, String defaultValue) throws InvalidParameterException {
+		// 1. Try load from environment
 		try {
-		PropertyValue propertyConf = configurationContext.getProperty(propertyName);
-			if(propertyConf != null && propertyConf.getValue() != null) {
-				return propertyConf.getValue();
-			}
-		}catch(Exception e) {logger.warn(MessageFormat.format("Could not find or load property with name {0} in properties", propertyName));}
-		
-		//2. Try load from environment
-		try {
-		String propertyEnv = System.getenv(propertyName);
-			if(propertyEnv != null) {
+			String propertyEnv = System.getenv(propertyName);
+			if (propertyEnv != null) {
 				return propertyEnv;
 			}
-		} catch(Exception e) {logger.warn(MessageFormat.format("Could not find or load property with name {0} in environment", propertyName));}
-		
-		
-		
+		} catch (Exception e) {
+			logger.warn(
+					MessageFormat.format("Could not find or load property with name {0} in environment", propertyName));
+		}
+
+		// 2. Try load from configurations
+		try {
+			PropertyValue propertyConf = configurationContext.getProperty(propertyName);
+			if (propertyConf != null && propertyConf.getValue() != null) {
+				return propertyConf.getValue();
+			}
+		} catch (Exception e) {
+			logger.warn(
+					MessageFormat.format("Could not find or load property with name {0} in properties", propertyName));
+		}
+
 		return defaultValue;
 	}
-	
-	public static String get(String propertyName) throws InvalidParameterException
-	{
-		String property = ConfigLoader.get(propertyName, null);
-		if(property != null)
+
+	public static String getProperty(String propertyName) throws InvalidParameterException {
+		String property = ConfigLoader.getProperty(propertyName, null);
+		if (property != null)
 			return property;
-		throw new InvalidParameterException(MessageFormat.format("Could not find or load required property {0}", propertyName));
+		throw new InvalidParameterException(
+				MessageFormat.format("Could not find or load required property {0}", propertyName));
 	}
-	
+
 }
