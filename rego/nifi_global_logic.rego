@@ -5,33 +5,48 @@ import data.nifi_inp
 
 import data.nifi_global_policies.global_policies
 
-# Global Rules Logic
-global_policy_types := [okey | okey := object.keys(global_policies)[_]]
-res_is_global_type := nifi_inp.resource_id in global_policy_types
-has_key(obj, key) := true if _ = obj[key]
+# This rego file contains the logical rules in order to lookup 
+# an entry in the nifi_global_policies abstraction layer
+
+
+global_policy_types := [okey | okey := object.keys(global_policies)[_]] # returns the available keys of the nifi_global_policies abstraction layer
+res_is_global_type := nifi_inp.resource_id in global_policy_types       # returns a boolean wether the resource is a global resource
+
+
+has_key(obj, key) := true if _ = obj[key] # helper function
+
+# Searches an entry in the nifi_global_policies abstraction layer  
 global_policy_user_has_permissions(res_id, user_name, action) := true if {
     has_key(global_policies, res_id)
     has_key(global_policies[res_id]["users"], user_name)
     global_policies[res_id]["users"][user_name] == action
 }
+
+# true, if user is allowed to read on a given global policy
 global_policy_user_read := true if {
     global_policy_user_has_permissions(
         nifi_inp.inherit_resource_id, 
         nifi_inp.user_name, 
         "READ")
 }
+
+# true, if user is allowed to write on a given global policy
 global_policy_user_write := true if {
     global_policy_user_has_permissions(
         nifi_inp.inherit_resource_id, 
         nifi_inp.user_name, 
         "WRITE")
 }
+
+# true, if user is allowed to read AND write on a given global policy
 global_policy_user_full := true if {
     global_policy_user_has_permissions(
         nifi_inp.inherit_resource_id, 
         nifi_inp.user_name, 
         "FULL")
 }
+
+# true, if user is explicitly denied on a given global policy
 global_policy_user_denied := true if {
     global_policy_user_has_permissions(
         nifi_inp.inherit_resource_id, 
