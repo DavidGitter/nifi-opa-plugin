@@ -25,10 +25,11 @@ global_policy_user_has_permissions(res_id, user_name, action) := true if {
 # Searches user-group entry in the nifi_global_policies abstraction layer  
 global_policy_group_has_permissions(res_id, user_groups, action) := true if {
     has_key(global_policies, res_id)
-    x := { k | k = object.keys(global_policies[nifi_inp.inherit_resource_id]["groups"])[_] }
-    y := { k | k = nifi_inp.user_groups[_] }
+    x := { trim(k, " ") | k = object.keys(global_policies[res_id]["groups"])[_] }
+    y := { trim(k, " ") | k = user_groups[_] }
     count(x & y) > 0 # check if there is atleast one intersecting group
 }
+
 
 ### READ
 # true, if user is allowed to read on a given global policy
@@ -98,7 +99,3 @@ global_policy_user_denied := true if {
         nifi_inp.user_groups, 
         "DENY")
 }
-
-
-# e2 = is_array(y)
-# z := intersection(x|y)

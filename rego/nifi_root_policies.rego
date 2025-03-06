@@ -34,7 +34,7 @@ root_policies := {
         "Peter":{
             "read": {
                 "users": ["User1"],
-                "groups": []
+                "groups": ["Group2","Group234"]
             },
             "write": {
                 "users": ["User1"],
@@ -42,7 +42,7 @@ root_policies := {
             },
             "deny": {
                 "users": [],
-                "groups": []
+                "groups": ["denyGroup"]
             }
         },
 
