@@ -47,7 +47,6 @@ services:
       TRUSTSTORE_PATH: /opt/certs/truststore.jks
       TRUSTSTORE_PASSWORD: beMkAJaKVJItosXYKfjspeFH1To7LvpwxHbrTga4lOg
       TRUSTSTORE_TYPE: JKS 
-      INITIAL_ADMIN_IDENTITY: 'user01'
       LDAP_AUTHENTICATION_STRATEGY: 'SIMPLE'
       LDAP_MANAGER_DN: 'cn=admin,dc=example,dc=org'
       LDAP_MANAGER_PASSWORD: 'adminpassword'
