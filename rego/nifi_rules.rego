@@ -30,7 +30,7 @@ allow := {
 } if {
     nifi_glob.res_is_global_type
     nifi_inp.action == "read"
-    nifi_glob.global_policy_user_read
+    nifi_glob.global_policy_read
 }
 
 # check for writing permission
@@ -40,7 +40,7 @@ allow := {
 } if {
     nifi_glob.res_is_global_type
     nifi_inp.action == "write"
-    nifi_glob.global_policy_user_write
+    nifi_glob.global_policy_write
 }
 
 # check for full permission when action is read
@@ -50,7 +50,7 @@ allow := {
 } if {
     nifi_glob.res_is_global_type
     nifi_inp.action == "read"
-    nifi_glob.global_policy_user_full
+    nifi_glob.global_policy_full
 }
 
 # check for full permission when action is write
@@ -60,7 +60,7 @@ allow := {
 } if {
     nifi_glob.res_is_global_type
     nifi_inp.action == "write"
-    nifi_glob.global_policy_user_full
+    nifi_glob.global_policy_full
 }
 
 # check for denied permission
@@ -70,7 +70,7 @@ allow := {
     "message": sprintf("Action %s on global resource %s denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if {
     nifi_glob.res_is_global_type
-    nifi_glob.global_policy_user_denied
+    nifi_glob.global_policy_denied
 }
 
 

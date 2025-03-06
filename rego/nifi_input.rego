@@ -10,7 +10,11 @@ resource_safeDescr := input.requestedResource.safeDescription
 resource_context := input.resourceContext
 action := input.action.name
 user_name := input.user.name
-user_groups := split(input.user.name.groups, ",")
+user_groups := split(input.user.groups, ",")
 user_context := input.userContext
 isAccessAttempt := input.properties.isAccessAttempt
 isAnonymous := input.properties.isAnonymous
+
+# test := true if {
+#     action == "read"
+# }

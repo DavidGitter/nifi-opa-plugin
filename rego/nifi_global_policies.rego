@@ -11,7 +11,10 @@ global_policies := {
             "User1": "FULL",
             "User2": "READ"
         },
-        "groups": {}
+        "groups": {
+            "Group 1": "FULL",
+            "Test123": "READ"
+        }
     },
     "/controller": {
         "users": {

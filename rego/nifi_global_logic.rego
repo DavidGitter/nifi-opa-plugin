@@ -15,37 +15,74 @@ res_is_global_type := nifi_inp.resource_id in global_policy_types       # return
 
 has_key(obj, key) := true if _ = obj[key] # helper function
 
-# Searches an entry in the nifi_global_policies abstraction layer  
+# Searches user entry in the nifi_global_policies abstraction layer  
 global_policy_user_has_permissions(res_id, user_name, action) := true if {
     has_key(global_policies, res_id)
     has_key(global_policies[res_id]["users"], user_name)
     global_policies[res_id]["users"][user_name] == action
 }
 
+# Searches user-group entry in the nifi_global_policies abstraction layer  
+global_policy_group_has_permissions(res_id, user_groups, action) := true if {
+    has_key(global_policies, res_id)
+    x := { k | k = object.keys(global_policies[nifi_inp.inherit_resource_id]["groups"])[_] }
+    y := { k | k = nifi_inp.user_groups[_] }
+    count(x & y) > 0 # check if there is atleast one intersecting group
+}
+
+### READ
 # true, if user is allowed to read on a given global policy
-global_policy_user_read := true if {
+global_policy_read := true if {
     global_policy_user_has_permissions(
         nifi_inp.inherit_resource_id, 
         nifi_inp.user_name, 
         "READ")
 }
+# true, if user is allowed to read on a given global policy
+global_policy_read := true if {
+    global_policy_group_has_permissions(
+        nifi_inp.inherit_resource_id, 
+        nifi_inp.user_groups, 
+        "READ")
+}
 
+
+### WRITE
 # true, if user is allowed to write on a given global policy
-global_policy_user_write := true if {
+global_policy_write := true if {
     global_policy_user_has_permissions(
         nifi_inp.inherit_resource_id, 
         nifi_inp.user_name, 
         "WRITE")
 }
+# true, if user-group is allowed to write on a given global policy
+global_policy_write := true if {
+    global_policy_group_has_permissions(
+        nifi_inp.inherit_resource_id, 
+        nifi_inp.user_groups, 
+        "WRITE")
+}
 
+
+### FULL
 # true, if user is allowed to read AND write on a given global policy
-global_policy_user_full := true if {
+global_policy_full := true if {
     global_policy_user_has_permissions(
         nifi_inp.inherit_resource_id, 
         nifi_inp.user_name, 
         "FULL")
 }
 
+# true, if a user-group is allowed to read AND write on a given global policy
+global_policy_full := true if {
+    global_policy_group_has_permissions(
+        nifi_inp.inherit_resource_id, 
+        nifi_inp.user_groups, 
+        "FULL")
+}
+
+
+### DENY
 # true, if user is explicitly denied on a given global policy
 global_policy_user_denied := true if {
     global_policy_user_has_permissions(
@@ -53,3 +90,15 @@ global_policy_user_denied := true if {
         nifi_inp.user_name, 
         "DENY")
 }
+
+# true, if user-group is explicitly denied on a given global policy
+global_policy_user_denied := true if {
+    global_policy_group_has_permissions(
+        nifi_inp.inherit_resource_id, 
+        nifi_inp.user_groups, 
+        "DENY")
+}
+
+
+# e2 = is_array(y)
+# z := intersection(x|y)
