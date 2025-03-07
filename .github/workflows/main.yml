@@ -17,4 +17,4 @@ jobs:
         distribution: 'zulu'
         cache: maven
     - name: Build Application
-      run: mvn install ./authorizer
+      run: mvn install --file ./authorizer/pom.xml
