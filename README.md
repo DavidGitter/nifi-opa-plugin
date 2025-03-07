@@ -145,6 +145,3 @@ The **component permissions** can be set in the
 
 The following image is intended to illustrate the previously explained component authorizations
 ![alt](/docs/readme/component-logic.svg)
-
-> [!NOTE]  
-> This concept may be revised and simplified in the future.
