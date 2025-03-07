@@ -38,7 +38,7 @@ services:
     volumes:
       - ./certs/localhost/:/opt/certs/
       - ./authorizers-opa.xml:/opt/opa/authorizers-opa.xml
-      - ../authorizer/target/opa-authorizer-0.0.1.nar:/opt/nifi/nifi-current/extensions/opa-authorizer-0.0.1.nar
+      - ../authorizer/target/opa-authorizer.nar:/opt/nifi/nifi-current/extensions/opa-authorizer.nar
     environment:
       AUTH: ldap
       KEYSTORE_PATH: /opt/certs/keystore.jks
