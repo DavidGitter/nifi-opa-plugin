@@ -61,22 +61,12 @@ public class OpaAuthorizer implements Authorizer {
 					Map.of("isAccessAttempt", Boolean.toString(request.isAccessAttempt()),
 							"isAnonymous", Boolean.toString(request.isAnonymous())),
 					"userContext",
-					Map.of("", ""),
-
+					request.getUserContext() != null && !request.getUserContext().isEmpty() ? request.getUserContext() : Map.of("", ""),
 					"resourceContext",
-					Map.of("", ""));
-
-			if (request.getUserContext() != null && !request.getUserContext().isEmpty()) {
-				requestForm.put("userContext", request.getUserContext());
-			}
-
-			if (request.getResourceContext() != null && !request.getResourceContext().isEmpty()) {
-				requestForm.put("resourceContext", request.getResourceContext());
-			}
-
+					request.getResourceContext() != null && !request.getUserContext().isEmpty() ? request.getUserContext() : Map.of("", ""));
 		} catch (Exception e) {
 			logger.error(
-					MessageFormat.format("An error occured while trying to build the OPA-request: {0}", e.toString()));
+					"An error occured while trying to build the OPA-request", e);
 			return AuthorizationResult.denied("An error occured while trying to build the OPA-request");
 		}
 
