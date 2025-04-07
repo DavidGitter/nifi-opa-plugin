@@ -1,7 +1,7 @@
 <h1 align="center"> OPA-Authorizer for Apache NiFi</h1> <br>
 
 > [!IMPORTANT]  
-> This plugin is currently under development and should not yet be used in a productive environment.
+> This plugin is currently under development. The use in a productive environment should be treated with caution.
 
 ## Table of Contents
 
