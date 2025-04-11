@@ -45,7 +45,7 @@ public class OpaAuthorizer implements Authorizer {
 					"action",
 					Map.of("name", request.getAction().toString()),
 
-					"user",
+					"identity",
 					Map.of("name", request.getIdentity(),
 							"groups", String.join(",", request.getGroups())),
 
