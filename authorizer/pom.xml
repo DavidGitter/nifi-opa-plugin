@@ -19,7 +19,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <nifi.version>2.3.0</nifi.version>
+    <nifi-framework-api.version>1.28.1</nifi-framework-api.version>
   </properties>
 
   <dependencies>
@@ -46,7 +46,7 @@
     <dependency>
       <groupId>org.apache.nifi</groupId>
       <artifactId>nifi-framework-api</artifactId>
-      <version>${nifi.version}</version>
+      <version>${nifi-framework-api.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
