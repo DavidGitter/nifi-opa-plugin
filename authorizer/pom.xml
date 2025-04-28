@@ -17,9 +17,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-    <nifi-framework-api.version>1.28.1</nifi-framework-api.version>
   </properties>
 
   <dependencies>
@@ -133,6 +130,60 @@
     </pluginManagement>
     <finalName>${project.artifactId}</finalName>
   </build>
+
+  <profiles>
+    <profile>
+      <id>nifi-1.27.0</id>
+      <properties>
+        <nifi-framework-api.version>1.27.0</nifi-framework-api.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>nifi-1.28.1</id>
+      <properties>
+        <nifi-framework-api.version>1.28.1</nifi-framework-api.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>nifi-2.0.0</id>
+      <properties>
+        <nifi-framework-api.version>2.0.0</nifi-framework-api.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>nifi-2.1.0</id>
+      <properties>
+        <nifi-framework-api.version>2.1.0</nifi-framework-api.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>nifi-2.2.0</id>
+      <properties>
+        <nifi-framework-api.version>2.2.0</nifi-framework-api.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>nifi-2.3.0</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <nifi-framework-api.version>2.3.0</nifi-framework-api.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+      </properties>
+    </profile>
+  </profiles>
 
   <reporting>
     <plugins>
