@@ -5,25 +5,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class OPAResponse {
 	
-    private String allowed;
+    private boolean allowed;
+    private boolean resourceNotFound;
     private boolean dumpCache;
     private String message;
 
     @JsonCreator
     public OPAResponse(
-    		@JsonProperty("allowed") String allowed, 
-    		@JsonProperty("dumpCache") boolean dumpCache,
-    		@JsonProperty("message") String message
+            @JsonProperty("allowed") boolean allowed,
+            @JsonProperty("resourceNotFound") boolean resourceNotFound,
+            @JsonProperty("dumpCache") boolean dumpCache,
+            @JsonProperty("message") String message
     		) {
     	this.allowed = allowed;
     	this.dumpCache = dumpCache;
     	this.message = message;
     }
     
-    public String allowed() {
+    public boolean allowed() {
         return allowed;
     }
     
+    public boolean resourceNotFound() {
+        return resourceNotFound;
+    }
+
     public boolean dumpCache() {
     	return dumpCache;
     }
