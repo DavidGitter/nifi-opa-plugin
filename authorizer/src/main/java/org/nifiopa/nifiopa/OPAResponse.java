@@ -18,6 +18,7 @@ public class OPAResponse {
             @JsonProperty("message") String message
     		) {
     	this.allowed = allowed;
+        this.resourceNotFound = resourceNotFound;
     	this.dumpCache = dumpCache;
     	this.message = message;
     }
