@@ -29,7 +29,7 @@ This repository contains a plugin for Apache NiFi in order to add support for th
 ### Plugin
 For building the plugin in ``/authorizer``.
 
-* [Java 8 SDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [Java 11 JDK](https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html) (NiFi 1.x) or [Java 21 JDK](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html) (NiFi 2.x)
 * [Maven](https://maven.apache.org/download.cgi)
 
 
@@ -43,8 +43,11 @@ For using the test environment in ``/test-env``.
 
 ### Building the plugin
 To build the plugin go into the ``/authorizer`` folder and execute:
-````mvn install````
-This builds the ``.nar``-plugin in the ``/target`` folder.
+````mvn install````.
+This builds the ``.nar``-plugin in the ``/target`` folder for the latest NiFi version. To target a specific version of NiFi use the corresponding maven profile.
+````bash
+mvn install -Pnifi-1.28.1
+````
 
 ### Using the plugin
 
