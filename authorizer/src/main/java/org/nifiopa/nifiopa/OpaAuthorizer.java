@@ -66,16 +66,16 @@ public class OpaAuthorizer implements Authorizer {
 					request.getResourceContext() != null && !request.getUserContext().isEmpty() ? request.getUserContext() : Map.of("", ""));
 		} catch (Exception e) {
 			logger.error(
-					"An error occured while trying to build the OPA-request", e);
-			return AuthorizationResult.denied("An error occured while trying to build the OPA-request");
+					"An error occured while trying to build the OPA-request.", e);
+			return AuthorizationResult.denied("An error occured while trying to build the OPA-request.");
 		}
 
 		OPAResponse opaResponse = null;
 		try {
 			opaResponse = opaClient.evaluate(OPA_RULE_HEAD, requestForm, OPAResponse.class);
 		} catch (OPAException e) {
-			logger.error(MessageFormat.format("An error occured while trying to query against OPA: {0}", e.toString()));
-			return AuthorizationResult.denied("An error occured while trying to query against OPA");
+			logger.error("An error occured while trying to query against OPA.", e);
+			return AuthorizationResult.denied("An error occured while trying to query against OPA.");
 		}
 		if (opaResponse == null) {
 			logger.error("An error occured while unmarshalling an OPA response.");
@@ -89,23 +89,22 @@ public class OpaAuthorizer implements Authorizer {
 			cache.clear();
 		}
 
-		switch (opaResponse.allowed()) {
-			case "true":
+		if (opaResponse.resourceNotFound()) {
+			cache.putCachedResult(request, AuthorizationResult.resourceNotFound());
+			logger.debug("Authorizer-Result: Resource not found");
+			return AuthorizationResult.resourceNotFound();
+		}
+
+		if (opaResponse.allowed()) {
 				cache.putCachedResult(request, AuthorizationResult.approved());
 				logger.debug("Authorizer-Result: Access was approved");
 				return AuthorizationResult.approved();
-			case "unknown":
-				cache.putCachedResult(request, AuthorizationResult.resourceNotFound());
-				logger.debug("Authorizer-Result: No access resource found");
-				return AuthorizationResult.resourceNotFound();
-			default:
+		} else {
 				cache.putCachedResult(request, AuthorizationResult.denied());
 				logger.debug("Authorizer-Result: Access was denied");
 				return AuthorizationResult
 						.denied(opaResponse.message() != null ? opaResponse.message() : "Access denied.");
 		}
-
-		// enum - switch
 	}
 
 	@Override

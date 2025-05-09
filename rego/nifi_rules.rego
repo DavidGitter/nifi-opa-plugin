@@ -17,7 +17,7 @@ import data.nifi_comp
 
 # default return values
 default allow = {
-    "allowed": "unknown",
+    "resourceNotFound": true,
     "dumpCache": true
 }
 
@@ -25,7 +25,7 @@ default allow = {
 
 # check for reading permission
 allow := {
-    "allowed": "true", 
+    "allowed": true, 
     "dumpCache": true
 } if {
     nifi_glob.res_is_global_type
@@ -35,7 +35,7 @@ allow := {
 
 # check for writing permission
 allow := {
-    "allowed": "true", 
+    "allowed": true, 
     "dumpCache": true
 } if {
     nifi_glob.res_is_global_type
@@ -45,7 +45,7 @@ allow := {
 
 # check for full permission when action is read
 allow := {
-    "allowed": "true", 
+    "allowed": true, 
     "dumpCache": true
 } if {
     nifi_glob.res_is_global_type
@@ -55,7 +55,7 @@ allow := {
 
 # check for full permission when action is write
 allow := {
-    "allowed": "true", 
+    "allowed": true, 
     "dumpCache": true
 } if {
     nifi_glob.res_is_global_type
@@ -65,7 +65,7 @@ allow := {
 
 # check for denied permission
 allow := {
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Action %s on global resource %s denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if {
@@ -81,7 +81,7 @@ allow := {
 
 # explicit allowed 
 allow := {
-    "allowed": "true", 
+    "allowed": true, 
     "dumpCache": true
 } if {
     nifi_comp.comp_is_root_type
@@ -92,7 +92,7 @@ allow := {
 
 # implicit denied
 allow := {
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Action %s on component %s is implicity denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if {
@@ -107,7 +107,7 @@ allow := {
 
 # explicit root-inherit allowed
 allow := {
-    "allowed": "true", 
+    "allowed": true, 
     "dumpCache": true
 } if { 
     nifi_comp.comp_is_root_type
@@ -119,7 +119,7 @@ allow := {
 
 # implicit root-inherit denied
 allow := {
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Action %s on component %s is implicity denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if { 
@@ -132,7 +132,7 @@ allow := {
 
 # explicit root-inherit denied
 allow := {
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Action %s on component %s is explicitly denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if { 
@@ -148,7 +148,7 @@ allow := {
 
 # explicit root component allowed
 allow := {
-    "allowed": "true", 
+    "allowed": true, 
     "dumpCache": true
 } if {
     nifi_comp.comp_is_root_type
@@ -162,7 +162,7 @@ allow := {
 
 # implicit denied
 allow := { 
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Action %s on component %s is implicity denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if { 
@@ -177,7 +177,7 @@ allow := {
 
 ## check for illegal 'non-root equals root name' component name
 allow := {
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Multiple use of root component name %s detected.", [nifi_inp.resource_name])
 } if { 
@@ -193,7 +193,7 @@ allow := {
 
 # explicit node component allowed
 allow := {
-    "allowed": "true", 
+    "allowed": true, 
     "dumpCache": true
 } if {
     nifi_comp.comp_is_node_type
@@ -206,7 +206,7 @@ allow := {
 
 # explicit node component permission changed
 allow := { 
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Action %s on component %s is implicitly denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if { 
@@ -222,7 +222,7 @@ allow := {
 
 # explicit node denied
 allow := { 
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Action %s on component %s is explicity denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if { 
@@ -238,7 +238,7 @@ allow := {
 
 # explicit node component allowed
 allow := {
-    "allowed": "true", 
+    "allowed": true, 
     "dumpCache": true
 } if {
     nifi_comp.comp_is_node_type
@@ -251,7 +251,7 @@ allow := {
 
 # implicit node component permission changed
 allow := { 
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Action %s on component %s is implicitly denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if { 
@@ -266,7 +266,7 @@ allow := {
 
 # explicit node denied
 allow := { 
-    "allowed": "false", 
+    "allowed": false, 
     "dumpCache": true,
     "message": sprintf("Action %s on component %s is explicity denied.", [nifi_inp.action, nifi_inp.resource_name])
 } if { 
