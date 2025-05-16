@@ -66,6 +66,7 @@ In order to use the plugin in Apache NiFi the following steps must be performed:
 </authorizer>
 ````
 Alternatively, the properties fields can also be set as environment variables.
+
 3. Set the env-variable ``NIFI_SECURITY_USER_AUTHORIZER`` of Apache NiFi **or** the ``nifi.security.user.authorizer`` in Apache NiFis nifi.properties-file to ``opa-authorizer``.
 4. Place the ``nar``-plugin you build aboth in the ``/opt/nifi/nifi-current/extensions/`` folder of your Apache NiFi Instance / Container
 5. Restart Apache NiFi
