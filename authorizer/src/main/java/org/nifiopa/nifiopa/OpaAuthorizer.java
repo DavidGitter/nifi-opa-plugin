@@ -63,7 +63,7 @@ public class OpaAuthorizer implements Authorizer {
 					"userContext",
 					request.getUserContext() != null && !request.getUserContext().isEmpty() ? request.getUserContext() : Map.of("", ""),
 					"resourceContext",
-					request.getResourceContext() != null && !request.getUserContext().isEmpty() ? request.getUserContext() : Map.of("", ""));
+					request.getResourceContext() != null && !request.getResourceContext().isEmpty() ? request.getResourceContext() : Map.of("", ""));
 		} catch (Exception e) {
 			logger.error(
 					"An error occured while trying to build the OPA-request.", e);
