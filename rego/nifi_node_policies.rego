@@ -12,7 +12,7 @@ package nifi_node_policies
 
 node_policies := {
     "/processors": {
-        "88bfd170-0193-1000-f96d-e7b2d9491f59":{
+        "ef5":{
             "read": {
                 "users": [],
                 "groups": []
@@ -22,42 +22,43 @@ node_policies := {
                 "groups": []
             },
             "deny": {
-                "users": ["User1"],
-                "groups": []
+                "users": [],
+                "groups": ["Group-A"]
             }
-        }
-    },
+        },
 
-    "/process-groups": {
-        "917f4d3b-0193-1000-15cd-ede4486f3677":{
+        "f3e":{
             "read": {
-                "users": [],
+                "users": ["Carol"],
                 "groups": []
             },
             "write": {
                 "users": [],
-                "groups": []
+                "groups": ["Group-B"]
             },
             "deny": {
-                "users": ["User1"],
+                "users": [],
                 "groups": []
             }
         },
 
-        "91b2a4e0-0193-1000-e4e4-8a807d160662":{ #User1Private
+        "bb4":{
             "read": {
                 "users": [],
                 "groups": []
             },
             "write": {
-                "users": [],
+                "users": ["Alice"],
                 "groups": []
             },
             "deny": {
-                "users": ["User2"],
+                "users": ["Bob"],
                 "groups": []
             }
-        }
+        },
+    },
+
+    "/process-groups": {
     },
 
     "/operation": {

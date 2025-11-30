@@ -8,82 +8,60 @@ package nifi_global_policies
 global_policies := {
     "/flow": {
         "users": {
-            "User1": "FULL",
-            "User2": "READ"
+            "Alice": "FULL",
+            "Bob": "FULL",
+            "Carol": "READ"
         },
         "groups": {
-            "Group 1": "FULL",
-            "Test123": "READ"
+            "Group-A": "FULL",
+            "Group-B": "WRITE"
         }
     },
     "/controller": {
         "users": {
-            "User1": "FULL",
-            "User2": "READ"
+            "Alice": "FULL",
+            "Bob": "FULL",
+            "Carol": "READ"
         },
-        "groups": {}
+        "groups": {
+            "Group-A": "FULL",
+            "Group-B": "WRITE"
+        }
     },
     "/parameter-contexts": {
-        "users": {
-            "User1": "FULL",
-            "User2": "READ"
-        },
+        "users": {},
         "groups": {}
     },
     "/provenance": {
-        "users": {
-            "User1": "FULL",
-            "User2": "READ"
-        },
+        "users": {},
         "groups": {}
     },
     "/restricted-components": {
-        "users": {
-            "User1": "FULL",
-            "User2": "READ"
-        },
+        "users": {},
         "groups": {}
     },
     "/policies": {
-        "users": {
-            "User1": "FULL",
-            "User2": "READ"
-        },
+        "users": {},
         "groups": {}
     },
     "/tenants": {
-        "users": {
-            "User1": "FULL",
-            "User2": "READ"
-        },
+        "users": {},
         "groups": {}
     },
     "/site-to-site": {
-        "users": {
-            "User1": "FULL",
-            "User2": "READ"
-        },
+        "users": {},
         "groups": {}
     },
     "/system": {
-        "users": {
-            "User1": "FULL",
-            "User2": "READ"
-        },
+        "users": {},
         "groups": {}
     },
     "/proxy": {
-        "users": {
-            "User1": "FULL",
-            "User2": "READ"
-        },
+        "users": {},
         "groups": {}
     },
     "/counters": {
-        "users": {
-            "User1": "FULL",
-            "User2": "READ"
-        },
+        "users": {},
         "groups": {}
     }
 }

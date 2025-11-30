@@ -16,58 +16,44 @@ root_policies := {
     },
 
     "/process-groups": {
-        "Projekt1":{
-            "read": {
-                "users": ["User1", "User2", "User3"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User1", "User2", "User3"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        },
-
-        "Peter":{
-            "read": {
-                "users": ["User1"],
-                "groups": ["Group2","Group234"]
-            },
-            "write": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": ["denyGroup"]
-            }
-        },
-
-        "Otto":{
-            "read": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        },
 
         "NiFi Flow":{
             "read": {
-                "users": ["User1", "User2"],
+                "users": ["Alice", "Bob", "Carol"],
                 "groups": []
             },
             "write": {
-                "users": ["User1", "User2"],
+                "users": ["Alice", "Bob"],
+                "groups": []
+            },
+            "deny": {
+                "users": [],
+                "groups": []
+            }
+        },
+
+        "Project 1":{
+            "read": {
+                "users": ["Alice"],
+                "groups": ["Group-A"]
+            },
+            "write": {
+                "users": ["Alice"],
+                "groups": []
+            },
+            "deny": {
+                "users": [],
+                "groups": []
+            }
+        },
+
+        "Project 2":{
+            "read": {
+                "users": ["Bob"],
+                "groups": []
+            },
+            "write": {
+                "users": ["Bob"],
                 "groups": []
             },
             "deny": {
@@ -78,194 +64,20 @@ root_policies := {
     },
 
     "/operation": {
-        "Peter":{
-            "read": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        },
-
-        "Otto":{
-            "read": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        }
     },
 
     "/provenance-data": {
-        "Peter":{
-            "read": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        },
-
-        "Otto":{
-            "read": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        }
     },
 
     "/data" : {
-        "Peter":{
-            "read": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        },
-
-        "Otto":{
-            "read": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        }
     },
 
     "/policies": {
-        "Peter":{
-            "read": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        },
-
-        "Otto":{
-            "read": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        }
     },
 
     "/data-transfer/input-ports": {
-        "Peter":{
-            "read": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        },
-
-        "Otto":{
-            "read": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        }
     },
 
     "/data-transfer/output-ports": {
-        "Peter":{
-            "read": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User1"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        },
-
-        "Otto":{
-            "read": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "write": {
-                "users": ["User2"],
-                "groups": []
-            },
-            "deny": {
-                "users": [],
-                "groups": []
-            }
-        }
     }
 }
